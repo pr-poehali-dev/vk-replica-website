@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -12,6 +12,7 @@ interface Track {
   artist: string;
   duration: string;
   cover: string;
+  audio: string;
 }
 
 interface Playlist {
@@ -25,17 +26,19 @@ const Index = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState([75]);
   const [progress, setProgress] = useState([0]);
+  const [duration, setDuration] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const tracks: Track[] = [
-    { id: 1, title: 'Самая-самая', artist: 'Кишлак', duration: '3:25', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop' },
-    { id: 2, title: 'Твои глаза', artist: 'Кишлак', duration: '3:18', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop' },
-    { id: 3, title: 'Лада седан', artist: 'Кишлак', duration: '2:54', cover: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=300&fit=crop' },
-    { id: 4, title: 'Верни мне мой 2007', artist: 'Кишлак', duration: '3:42', cover: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=300&fit=crop' },
-    { id: 5, title: 'Мама мыла раму', artist: 'Кишлак', duration: '3:15', cover: 'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=300&h=300&fit=crop' },
-    { id: 6, title: 'Neon Dreams', artist: 'Synthwave Collective', duration: '3:42', cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop' },
-    { id: 7, title: 'Electric Heartbeat', artist: 'Nova Sound', duration: '4:15', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop' },
-    { id: 8, title: 'Midnight Groove', artist: 'Urban Beats', duration: '3:28', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop' },
+    { id: 1, title: 'Самая-самая', artist: 'Кишлак', duration: '3:25', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+    { id: 2, title: 'Твои глаза', artist: 'Кишлак', duration: '3:18', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+    { id: 3, title: 'Лада седан', artist: 'Кишлак', duration: '2:54', cover: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=300&fit=crop', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+    { id: 4, title: 'Верни мне мой 2007', artist: 'Кишлак', duration: '3:42', cover: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=300&fit=crop', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+    { id: 5, title: 'Мама мыла раму', artist: 'Кишлак', duration: '3:15', cover: 'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=300&h=300&fit=crop', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+    { id: 6, title: 'Neon Dreams', artist: 'Synthwave Collective', duration: '3:42', cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' },
+    { id: 7, title: 'Electric Heartbeat', artist: 'Nova Sound', duration: '4:15', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
+    { id: 8, title: 'Midnight Groove', artist: 'Urban Beats', duration: '3:28', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3' },
   ];
 
   const playlists: Playlist[] = [
@@ -45,14 +48,86 @@ const Index = () => {
     { id: 4, name: 'Вечер', count: 31 },
   ];
 
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play();
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume[0] / 100;
+    }
+  }, [volume]);
+
+  useEffect(() => {
+    if (currentTrack && audioRef.current) {
+      audioRef.current.src = currentTrack.audio;
+      audioRef.current.load();
+      if (isPlaying) {
+        audioRef.current.play();
+      }
+    }
+  }, [currentTrack]);
+
   const handlePlayTrack = (track: Track) => {
-    setCurrentTrack(track);
-    setIsPlaying(true);
-    setProgress([0]);
+    if (currentTrack?.id === track.id) {
+      setIsPlaying(!isPlaying);
+    } else {
+      setCurrentTrack(track);
+      setIsPlaying(true);
+      setProgress([0]);
+    }
   };
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setProgress([audioRef.current.currentTime]);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleProgressChange = (value: number[]) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = value[0];
+      setProgress(value);
+    }
+  };
+
+  const handleEnded = () => {
+    const currentIndex = tracks.findIndex(t => t.id === currentTrack?.id);
+    if (currentIndex < tracks.length - 1) {
+      handlePlayTrack(tracks[currentIndex + 1]);
+    } else {
+      setIsPlaying(false);
+    }
+  };
+
+  const handlePrevTrack = () => {
+    const currentIndex = tracks.findIndex(t => t.id === currentTrack?.id);
+    if (currentIndex > 0) {
+      handlePlayTrack(tracks[currentIndex - 1]);
+    }
+  };
+
+  const handleNextTrack = () => {
+    const currentIndex = tracks.findIndex(t => t.id === currentTrack?.id);
+    if (currentIndex < tracks.length - 1) {
+      handlePlayTrack(tracks[currentIndex + 1]);
+    }
   };
 
   const filteredTracks = tracks.filter(
@@ -249,7 +324,7 @@ const Index = () => {
                     <Button variant="ghost" size="icon">
                       <Icon name="Shuffle" size={18} />
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" onClick={handlePrevTrack}>
                       <Icon name="SkipBack" size={18} />
                     </Button>
                     <Button
@@ -259,7 +334,7 @@ const Index = () => {
                     >
                       <Icon name={isPlaying ? "Pause" : "Play"} size={18} />
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" onClick={handleNextTrack}>
                       <Icon name="SkipForward" size={18} />
                     </Button>
                     <Button variant="ghost" size="icon">
@@ -283,8 +358,8 @@ const Index = () => {
                   </span>
                   <Slider
                     value={progress}
-                    onValueChange={setProgress}
-                    max={240}
+                    onValueChange={handleProgressChange}
+                    max={duration}
                     step={1}
                     className="flex-1"
                   />
@@ -295,6 +370,12 @@ const Index = () => {
           )}
         </main>
       </div>
+      <audio
+        ref={audioRef}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={handleEnded}
+      />
     </div>
   );
 };
