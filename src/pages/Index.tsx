@@ -28,12 +28,14 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const tracks: Track[] = [
-    { id: 1, title: 'Neon Dreams', artist: 'Synthwave Collective', duration: '3:42', cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop' },
-    { id: 2, title: 'Electric Heartbeat', artist: 'Nova Sound', duration: '4:15', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop' },
-    { id: 3, title: 'Midnight Groove', artist: 'Urban Beats', duration: '3:28', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop' },
-    { id: 4, title: 'Crystal Waves', artist: 'Ambient Flow', duration: '5:10', cover: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=300&fit=crop' },
-    { id: 5, title: 'Digital Sunrise', artist: 'Electronic Dreams', duration: '4:02', cover: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=300&fit=crop' },
-    { id: 6, title: 'Velocity', artist: 'Bass Legion', duration: '3:35', cover: 'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=300&h=300&fit=crop' },
+    { id: 1, title: 'Самая-самая', artist: 'Кишлак', duration: '3:25', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop' },
+    { id: 2, title: 'Твои глаза', artist: 'Кишлак', duration: '3:18', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop' },
+    { id: 3, title: 'Лада седан', artist: 'Кишлак', duration: '2:54', cover: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=300&fit=crop' },
+    { id: 4, title: 'Верни мне мой 2007', artist: 'Кишлак', duration: '3:42', cover: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=300&fit=crop' },
+    { id: 5, title: 'Мама мыла раму', artist: 'Кишлак', duration: '3:15', cover: 'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=300&h=300&fit=crop' },
+    { id: 6, title: 'Neon Dreams', artist: 'Synthwave Collective', duration: '3:42', cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop' },
+    { id: 7, title: 'Electric Heartbeat', artist: 'Nova Sound', duration: '4:15', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop' },
+    { id: 8, title: 'Midnight Groove', artist: 'Urban Beats', duration: '3:28', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop' },
   ];
 
   const playlists: Playlist[] = [
